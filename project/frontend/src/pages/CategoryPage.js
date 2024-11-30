@@ -6,6 +6,7 @@ const CategoryPage = () => {
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState('');
   const token = localStorage.getItem('token');
+  
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -49,8 +50,11 @@ const CategoryPage = () => {
     }
   };
 
+  
+
   const handleCategorySubmit = async (e) => {
     e.preventDefault();
+
     try {
       if (formData.name.trim() === '' || formData.description.trim() === '') {
         setError('Category name and description cannot be empty');

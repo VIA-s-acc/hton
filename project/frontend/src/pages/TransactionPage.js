@@ -261,7 +261,7 @@ const TransactionForm = () => {
               <button type="submit" className="submit-btn">{isEditing ? 'Update Transaction' : 'Add Transaction'}</button><br />
               <dir></dir>
               {isEditing && (
-                <button type="submit" onClick={() => handleDeleteTransaction(currentTransactionId)} className="submit-btn" style ={{ backgroundColor: '#FF5555' }}>
+                <button type="button" onClick={() => handleDeleteTransaction(currentTransactionId)} className="submit-btn" style ={{ backgroundColor: '#FF5555' }}>
                   Delete Transaction
                 </button>
               )}
@@ -288,7 +288,7 @@ const TransactionForm = () => {
             <div style={{
               bottom: '10px',
               right: '100x',
-              fontSize: '6px',
+              fontSize: '8px',
               color: '#888'
             }}>
               <small>Created At: {convertToLocalTime(transaction.created_at)}</small><br />

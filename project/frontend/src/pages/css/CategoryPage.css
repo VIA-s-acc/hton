@@ -176,3 +176,35 @@
     font-size: 0.9rem;
   }
 }
+
+.modal {
+  background: #fef0f6;
+  padding: 20px;
+  border-radius: 8px;
+  width: auto;
+  max-width: 100%;
+  margin: auto;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.submit-btn, .delete-btn {
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+
+.close-btn {
+  background-color: #6c757d;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}

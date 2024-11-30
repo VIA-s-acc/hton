@@ -43,7 +43,7 @@ function App() {
 
 const AppContainer = styled.div`
   font-family: 'Arial', sans-serif;
-  background-color: #fef0f6;  // Светлый розовый фон
+  background-color: #fef0f6; // Светлый розовый фон
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -54,7 +54,7 @@ const AppContainer = styled.div`
 
 const Nav = styled.nav`
   width: 100%;
-  background-color: #f29eaf;  // Мягкий розовый
+  background-color: #f29eaf; // Мягкий розовый
   padding: 20px;
   display: flex;
   justify-content: space-between;
@@ -68,7 +68,7 @@ const Logo = styled(Link)`
   font-weight: bold;
   text-decoration: none;
   &:hover {
-    color: #a3c1d1;  // Розовый при наведении
+    color: #a3c1d1; // Розовый при наведении
   }
 `;
 
@@ -86,12 +86,12 @@ const NavLink = styled(Link)`
   transition: background-color 0.3s ease, color 0.3s ease;
   
   &:hover {
-    background-color: #a3c1d1;  // Розовый при наведении
+    background-color: #a3c1d1; // Розовый при наведении
     color: white;
   }
 
   &.active {
-    background-color: #a3c1d1;  // Мягкий розовый для активной ссылки
+    background-color: #a3c1d1; // Мягкий розовый для активной ссылки
   }
 `;
 
