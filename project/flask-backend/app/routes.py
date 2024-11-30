@@ -59,8 +59,7 @@ def register_routes(app):
             return jsonify({"msg": "Category not found"}), 404
 
         user_id = get_jwt_identity()
-        print(user_id)
-        print(category.user_id)
+
         if int(category.user_id) != int(user_id):
             return jsonify({"msg": "You are not authorized to delete this category"}), 403
 
@@ -136,9 +135,9 @@ def register_routes(app):
                 type=type_,
                 category_id=category_id,
                 user_id=user_id,
-                date=datetime.datetime.utcnow().date()
+                # created_at=datetime.datetime.utcnow().date(),
+                # date=datetime.datetime.utcnow()
             )
-
             db.session.add(new_transaction)
             db.session.commit()
 
@@ -146,12 +145,10 @@ def register_routes(app):
         elif request.method == 'GET':
             user_id = get_jwt_identity()  # Получаем ID пользователя из токена
             transactions = Transaction.query.filter_by(user_id=user_id).all()
-            for transaction in transactions:
-                category_name = Category.query.get(transaction.category_id).name if transaction.category_id else "No category"
-            transactions_dict = [{"id": transaction.id, "amount": transaction.amount, "description": transaction.description, "type": transaction.type, "category_id": transaction.category_id, "date": transaction.date, "category_name": Category.query.get(transaction.category_id).name if transaction.category_id else "No category"} for transaction in transactions]
+            transactions_dict = [{"id": transaction.id, "amount": transaction.amount, "description": transaction.description, "type": transaction.type, "created_at": transaction.created_at,"category_id": transaction.category_id, "date": transaction.date, "category_name": Category.query.get(transaction.category_id).name if transaction.category_id else "No category"} for transaction in transactions]
             return jsonify(transactions_dict), 200
 
-    @app.route('/transactions/<int:id>', methods=['PUT'])
+    @app.route('/transactions/<int:id>/update', methods=['PUT'])
     @jwt_required()
     def update_transaction(id):
         data = request.get_json()
@@ -165,14 +162,40 @@ def register_routes(app):
         if not transaction:
             return jsonify({"msg": "Transaction not found"}), 404
 
+        if int(transaction.user_id) != int(get_jwt_identity()):
+            return jsonify({"msg": "You are not authorized to update this transaction"}), 403
+
         transaction.amount = amount
         transaction.description = description
         transaction.type = type_
         transaction.category_id = category_id
-        transaction.date = datetime.datetime.utcnow().date()  # Обновляем дату
+        transaction.date = datetime.datetime.utcnow() # Обновляем дату
+
+        db.session.commit() 
+
+        return jsonify({"msg": "Transaction updated successfully"}), 200
+    
+    @app.route('/categories/<int:id>/update', methods=['PUT'])
+    @jwt_required()
+    def update_category(id):
+        data = request.get_json()
+        name = data.get('name')
+        description = data.get('description')
+
+        category = Category.query.get(id)
+
+        if not category:
+            return jsonify({"msg": "Category not found"}), 404
+
+        if int(category.user_id) != int(get_jwt_identity()):
+            return jsonify({"msg": "You are not authorized to update this category"}), 403
+
+        category.name = name
+        category.description = description
 
         db.session.commit()
 
-        return jsonify({"msg": "Transaction updated successfully"}), 200
+        return jsonify({"msg": "Category updated successfully"}), 200
+
 
 

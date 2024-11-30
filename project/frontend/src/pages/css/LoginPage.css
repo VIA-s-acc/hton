@@ -1,0 +1,89 @@
+/* LoginPage.css */
+
+/* Контейнер для страницы */
+.login-container {
+  max-width: auto;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fef0f6; /* Мягкий розовый фон */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Контейнер формы */
+.login-form-container {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: auto;
+  margin: auto;
+  max-width: auto;
+  text-align: center;
+}
+
+/* Заголовок формы */
+.login-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+/* Сообщение об ошибке */
+.error-message {
+  color: #e74c3c;
+  margin-bottom: 20px;
+  font-size: 1rem;
+}
+
+/* Стиль для полей ввода */
+.input-field {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #f3a6c2; /* Розовая рамка */
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+/* Эффект на полях ввода при фокусе */
+.input-field:focus {
+  border-color: #f29eaf; /* Тёмный розовый при фокусе */
+  outline: none;
+}
+
+/* Кнопка отправки */
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #f3a6c2; /* Мягкий розовый для кнопки */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Эффект на кнопке при наведении */
+.submit-btn:hover {
+  background-color: #f29eaf; /* Более тёмный розовый при наведении */
+}
+
+/* Адаптивность для маленьких экранов */
+@media (max-width: 480px) {
+  .login-form-container {
+    padding: 20px;
+  }
+
+  .login-title {
+    font-size: 1.5rem;
+  }
+
+  .submit-btn {
+    font-size: 0.9rem;
+  }
+}

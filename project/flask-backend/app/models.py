@@ -22,7 +22,7 @@ class Transaction(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    date = db.Column(db.Date, nullable=True)  # Для изменения в будущем
+    date = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)  # Для изменения в будущем
 
     
 # Модель для категорий

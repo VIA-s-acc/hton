@@ -1,71 +1,69 @@
-/* src/App.css */
-body {
+/* App.css */
+
+/* Основные стили для контейнера */
+.app-container {
   font-family: 'Arial', sans-serif;
   background-color: #f4f4f9;
-  margin: 0;
-  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 20px;
 }
 
-nav {
-  background-color: #4CAF50;
-  padding: 10px;
-  text-align: center;
+/* Навигация */
+.nav {
+  width: 100%;
+  background-color: #2c3e50;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-nav a {
-  color: white;
+.nav-logo {
+  color: #ecf0f1;
+  font-size: 1.8rem;
+  font-weight: bold;
   text-decoration: none;
-  padding: 10px 20px;
-  margin: 0 10px;
-  font-size: 18px;
+}
+
+.nav-logo:hover {
+  color: #3498db;
+}
+
+.nav-links {
+  display: flex;
+  gap: 15px;
+}
+
+.nav-link {
+  color: #ecf0f1;
+  font-size: 1.1rem;
+  text-decoration: none;
+  padding: 8px 12px;
   border-radius: 5px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-nav a:hover {
-  background-color: #45a049;
+.nav-link:hover {
+  background-color: #3498db;
+  color: white;
 }
 
-.container {
-  width: 80%;
-  margin: 20px auto;
+.nav-link.active {
+  background-color: #2980b9;
+}
+
+/* Основной контент */
+.main-content {
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 40px;
   padding: 20px;
   background-color: white;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-  color: #333;
-  text-align: center;
-}
-
-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  margin-top: 10px;
-  width: 100%;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-input[type="text"], input[type="password"], input[type="email"], select, textarea {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, select:focus, textarea:focus {
-  border-color: #4CAF50;
-  outline: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

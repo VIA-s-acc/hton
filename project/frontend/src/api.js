@@ -75,6 +75,19 @@ export const fetchTransactions = async (token) => {
   }
 };
 
+export const updateTransaction = async (id, updatedData, token) => {
+  try {
+    const response = await api.put(`/transactions/${id}/update`, updatedData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Update Transaction Error:', error);
+    throw error;
+  }
+};
+
+
 export const deleteTransaction = async (transactionId, token) => {
   try {
     const response = await api.delete(`/transactions/${transactionId}/delete`, {
@@ -98,6 +111,19 @@ export const deleteCategory = async (categoryId, token) => {
     throw error;
   }
 };
+
+export const updateCategory = async (id, updatedData, token) => {
+  try {
+    const response = await api.put(`/categories/${id}/update`, updatedData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Update Category Error:', error);
+    throw error;
+  }
+};
+
 
 export const addCategory = async (categoryData, token) => {
   try {

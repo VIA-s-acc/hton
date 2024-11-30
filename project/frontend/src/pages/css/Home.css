@@ -1,0 +1,99 @@
+/* App.css */
+
+/* Пример базовых стилей */
+.container {
+  font-family: 'Arial', sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  background-color: #fef0f6; /* Мягкий розовый фон */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  color: #333;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.highlight {
+  color: #f3a6c2; /* Мягкий розовый для выделения */
+}
+
+.message {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+.slider-wrapper {
+  margin-bottom: 40px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.slide img {
+  width: 100%;
+  height: auto;
+}
+
+.slide {
+  position: relative;
+  width: 100%;
+  height: 600px; /* Высота слайда */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9e1ec; /* Мягкий розовый фон для слайда */
+}
+
+.slide-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease-in-out;
+}
+
+.slide-image:hover {
+  transform: scale(1.05);
+}
+
+.slide-text {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.nav {
+  margin-top: 40px;
+}
+
+.nav-list {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+}
+
+.nav-item {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.styled-link {
+  text-decoration: none;
+  color: #f3a6c2; /* Розовый для ссылок */
+  transition: color 0.3s;
+}
+
+.styled-link:hover {
+  color: #f29eaf; /* Более тёмный розовый при наведении */
+}
