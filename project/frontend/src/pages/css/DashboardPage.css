@@ -16,8 +16,11 @@
 
 .bottom-row {
   display: flex;
-  gap: 20px;
-  
+  flex-wrap: wrap; /* Чтобы элементы переносились на новую строку при нехватке места */
+  gap: 1rem; /* Расстояние между блоками */
+  width: 100%;
+  height: auto; /* Высота адаптируется */
+  box-sizing: border-box; /* Учитываем границы и отступы */
 }
 
 .transactions-table,
@@ -65,6 +68,15 @@
   max-width: auto;
   height: 100%;
   max-height: 100%;
+  display: 'flex';
+  flex-direction: 'row';
+  justify-content: 'space-between';
+  align-items: 'center'; 
+  width: '100%';
+  height: 'auto'; 
+  overflow: 'auto';
+  box-sizing: 'border-box' 
+
 }
 
 
@@ -88,5 +100,4 @@
 .sc-ivxoEo.hyFoWH {
   width: 100%;
   max-width: 96%;
-  height: 100%;
 }

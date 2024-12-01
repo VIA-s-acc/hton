@@ -56,13 +56,19 @@ def register_routes(app):
     @jwt_required()
     def delete_category(category_id):
         category = Category.query.get(category_id)
+        transactions = Transaction.query.filter_by(category_id=category_id).all()
+        
         if not category:
             return jsonify({"msg": "Category not found"}), 404
-
+        
         user_id = get_jwt_identity()
 
         if int(category.user_id) != int(user_id):
             return jsonify({"msg": "You are not authorized to delete this category"}), 403
+        
+        for transaction in transactions:
+            db.session.delete(transaction)
+
 
         db.session.delete(category)
         db.session.commit()
@@ -206,6 +212,7 @@ def register_routes(app):
         end_date_chart = request.args.get('end_date_chart')
         start_date = request.args.get('start_date')
         end_date = request.args.get('end_date')
+        
 
         # Optionally, print out the received dates for debugging        
         user_id = get_jwt_identity()
@@ -238,8 +245,36 @@ def register_routes(app):
             ).all()
         ]
         
-        # Calculate the total sum based on the date range
-        total_sum_income = db.session.query(db.func.sum(
+        chart_transactions = [
+            {
+                'id': transaction.id,
+                'amount': transaction.amount,
+                'description': transaction.description,
+                'category_id': transaction.category_id,
+                'category_name': Category.query.get(transaction.category_id).name if transaction.category_id else "No category",
+                'created_at': transaction.created_at,
+                'type': transaction.type,
+                'date': transaction.date,
+            }
+            for transaction in Transaction.query.filter_by(user_id=user_id).filter(
+                Transaction.date >= start_date_chart if start_date_chart else True,
+                Transaction.date <= end_date_chart if end_date_chart else True
+            ).all()
+        ]
+        
+        all_transactions = [{
+                'id': transaction.id,
+                'amount': transaction.amount,
+                'description': transaction.description,
+                'category_id': transaction.category_id,
+                'category_name': Category.query.get(transaction.category_id).name if transaction.category_id else "No category",
+                'created_at': transaction.created_at,
+                'type': transaction.type,
+                'date': transaction.date,
+            }
+            for transaction in Transaction.query.filter_by(user_id=user_id).all()
+        ]
+        total_tr_sum_income = db.session.query(db.func.sum(
             case(
                 (Transaction.type == 'income', Transaction.amount),
                 (Transaction.type == 'expense', 0),
@@ -251,7 +286,7 @@ def register_routes(app):
             Transaction.date <= end_date if end_date else True
         )).scalar()
         
-        total_sum_expense = db.session.query(db.func.sum(
+        total_tr_sum_expense = db.session.query(db.func.sum(
             case(
                 (Transaction.type == 'income', 0),
                 (Transaction.type == 'expense', Transaction.amount),
@@ -262,11 +297,38 @@ def register_routes(app):
             Transaction.date >= start_date if start_date else True,
             Transaction.date <= end_date if end_date else True
         )).scalar()
+        
+        
+        # Calculate the total sum based on the date range
+        total_sum_income = db.session.query(db.func.sum(
+            case(
+                (Transaction.type == 'income', Transaction.amount),
+                (Transaction.type == 'expense', 0),
+                else_=0
+            )
+        ).filter(
+            Transaction.user_id == get_jwt_identity(),
+            Transaction.date >= start_date_chart if start_date_chart else True,
+            Transaction.date <= end_date_chart if end_date_chart else True
+        )).scalar()
+        
+        total_sum_expense = db.session.query(db.func.sum(
+            case(
+                (Transaction.type == 'income', 0),
+                (Transaction.type == 'expense', Transaction.amount),
+                else_=0
+            )
+        ).filter(
+            Transaction.user_id == get_jwt_identity(),
+            Transaction.date >= start_date_chart if start_date_chart else True,
+            Transaction.date <= end_date_chart if end_date_chart else True
+        )).scalar()
 
         # Calculate the total amount by category
         category_data_income = db.session.query(
             Category.id,
             Category.name,
+            Category.description,
             db.func.sum(
                 case(
                     (Transaction.type == 'income', Transaction.amount),
@@ -283,6 +345,7 @@ def register_routes(app):
         category_data_expense = db.session.query(
             Category.id, 
             Category.name,
+            Category.description,
             db.func.sum(
                 case(
                     (Transaction.type == 'income', 0),
@@ -298,21 +361,23 @@ def register_routes(app):
 
         # Prepare chart data
         chart_data_income = []
-        for id, category, total_amount_income in category_data_income:
+        for id, category, description,total_amount_income in category_data_income:
             share = (total_amount_income / total_sum_income) * 100 if total_sum_income != 0 else 0
             chart_data_income.append({
                 'id': id,
                 'category': category,
+                'description': description,
                 'total_amount_income': total_amount_income,
                 'share': round(share, 2)  # Share as a percentage
             })
 
         chart_data_expense = []
-        for id, category, total_amount_expense in category_data_expense:
+        for id, category, description, total_amount_expense in category_data_expense:
             share = (total_amount_expense / total_sum_expense) * 100 if total_sum_expense != 0 else 0
             chart_data_expense.append({
                 'id': id,
                 'category': category,
+                'description': description,
                 'total_amount_expense': total_amount_expense,
                 'share': round(share, 2)  # Share as a percentage
             })
@@ -329,13 +394,32 @@ def register_routes(app):
             "e_percent": round(e_percent, 2),
             "total": total,
         })
+        
+        total_tr = total_tr_sum_income + total_tr_sum_expense if total_tr_sum_income is not None and total_tr_sum_expense is not None else 0
+        total_tr_i_percent = (total_tr_sum_income / total_tr) * 100 if total_tr != 0 else 0
+        total_tr_e_percent = (total_tr_sum_expense / total_tr) * 100 if total_tr != 0 else 0
+
+        total_tr_data = []
+        total_tr_data.append({
+            'total_tr_income': total_tr_sum_income,
+            "total_tr_i_percent": round(total_tr_i_percent, 2),
+            'total_tr_expense': total_tr_sum_expense,
+            "total_tr_e_percent": round(total_tr_e_percent, 2),
+            "total_tr": total_tr,
+        })
+        
+        
+        
         # Return the response as JSON
         return jsonify({
             "categories": categories,
             "transactions": transactions,
+            "total_tr_data": total_tr_data,
             "total_sum_income": total_sum_income,
             "chart_data_income": chart_data_income,
             "total_sum_expense": total_sum_expense,
             "chart_data_expense": chart_data_expense,
-            "chart_data_total": total_data
+            "chart_data_total": total_data,
+            "chart_transactions": chart_transactions,
+            "all_transactions": all_transactions
         }), 200
