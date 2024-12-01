@@ -1,0 +1,92 @@
+
+
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width:auto;
+  margin: auto
+}
+
+.top-row {
+  display: flex;
+  gap: 20px;
+}
+
+.bottom-row {
+  display: flex;
+  gap: 20px;
+  
+}
+
+.transactions-table,
+.chart-zone,
+.categories-table,
+.category-transactions-table {
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #fff;
+  flex: 1;  
+  max-width: auto;
+  overflow: hidden;
+  
+}
+
+.chart-container {
+  text-align: center;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+.data-table tbody tr:hover {
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+/* Updated styles for tables inside .table-row */
+.table-row {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  /* Adjust this based on your desired width for the tables */
+  margin:auto;
+  overflow: auto;
+  max-width: auto;
+  height: 100%;
+  max-height: 100%;
+}
+
+
+
+.table-box {
+  border: 2px solid #ccc;
+  padding-top: 10px;
+  border-radius: 5px;
+  margin: auto;
+  width: 100%;
+  max-width: auto;
+  padding: 10px;
+  height: 95%;
+  overflow: auto;
+  background-color: #fef0f6;
+  overflow-y: hidden;
+  
+  
+}
+
+.sc-ivxoEo.hyFoWH {
+  width: 100%;
+  max-width: 96%;
+  height: 100%;
+}

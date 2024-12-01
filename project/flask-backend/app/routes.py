@@ -3,6 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_tok
 from .models import db, User, Category, Transaction
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime
+from sqlalchemy import case
 
 def register_routes(app):
 
@@ -196,6 +197,145 @@ def register_routes(app):
         db.session.commit()
 
         return jsonify({"msg": "Category updated successfully"}), 200
+    
+    @app.route('/dashboard/get-data', methods=['GET'])
+    @jwt_required()
+    def get_dashboard_data():
+        # Retrieve the start and end dates from the query parameters
+        start_date_chart = request.args.get('start_date_chart')
+        end_date_chart = request.args.get('end_date_chart')
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
 
+        # Optionally, print out the received dates for debugging        
+        user_id = get_jwt_identity()
 
+        # Retrieve categories in a serializable format
+        categories = [
+            {
+                'id': category.id,
+                'name': category.name,
+                'description': category.description
+            }
+            for category in Category.query.filter_by(user_id=user_id).all()
+        ]
+        
+        # Filter transactions based on the provided start and end dates
+        transactions = [
+            {
+                'id': transaction.id,
+                'amount': transaction.amount,
+                'description': transaction.description,
+                'category_id': transaction.category_id,
+                'category_name': Category.query.get(transaction.category_id).name if transaction.category_id else "No category",
+                'created_at': transaction.created_at,
+                'type': transaction.type,
+                'date': transaction.date,
+            }
+            for transaction in Transaction.query.filter_by(user_id=user_id).filter(
+                Transaction.date >= start_date if start_date else True,
+                Transaction.date <= end_date if end_date else True
+            ).all()
+        ]
+        
+        # Calculate the total sum based on the date range
+        total_sum_income = db.session.query(db.func.sum(
+            case(
+                (Transaction.type == 'income', Transaction.amount),
+                (Transaction.type == 'expense', 0),
+                else_=0
+            )
+        ).filter(
+            Transaction.user_id == get_jwt_identity(),
+            Transaction.date >= start_date if start_date else True,
+            Transaction.date <= end_date if end_date else True
+        )).scalar()
+        
+        total_sum_expense = db.session.query(db.func.sum(
+            case(
+                (Transaction.type == 'income', 0),
+                (Transaction.type == 'expense', Transaction.amount),
+                else_=0
+            )
+        ).filter(
+            Transaction.user_id == get_jwt_identity(),
+            Transaction.date >= start_date if start_date else True,
+            Transaction.date <= end_date if end_date else True
+        )).scalar()
 
+        # Calculate the total amount by category
+        category_data_income = db.session.query(
+            Category.id,
+            Category.name,
+            db.func.sum(
+                case(
+                    (Transaction.type == 'income', Transaction.amount),
+                    (Transaction.type == 'expense', 0),
+                    else_=0
+                )
+            ).label('total_amount_income')
+        ).join(Transaction).filter(
+            Transaction.user_id == get_jwt_identity(),
+            Transaction.date >= start_date_chart if start_date_chart else True,
+            Transaction.date <= end_date_chart if end_date_chart else True
+        ).group_by(Category.id).all()
+        
+        category_data_expense = db.session.query(
+            Category.id, 
+            Category.name,
+            db.func.sum(
+                case(
+                    (Transaction.type == 'income', 0),
+                    (Transaction.type == 'expense', Transaction.amount),
+                    else_=0
+                )
+            ).label('total_amount_expense')
+        ).join(Transaction).filter(
+            Transaction.user_id == get_jwt_identity(),
+            Transaction.date >= start_date_chart if start_date_chart else True,
+            Transaction.date <= end_date_chart if end_date_chart else True
+        ).group_by(Category.id).all()
+
+        # Prepare chart data
+        chart_data_income = []
+        for id, category, total_amount_income in category_data_income:
+            share = (total_amount_income / total_sum_income) * 100 if total_sum_income != 0 else 0
+            chart_data_income.append({
+                'id': id,
+                'category': category,
+                'total_amount_income': total_amount_income,
+                'share': round(share, 2)  # Share as a percentage
+            })
+
+        chart_data_expense = []
+        for id, category, total_amount_expense in category_data_expense:
+            share = (total_amount_expense / total_sum_expense) * 100 if total_sum_expense != 0 else 0
+            chart_data_expense.append({
+                'id': id,
+                'category': category,
+                'total_amount_expense': total_amount_expense,
+                'share': round(share, 2)  # Share as a percentage
+            })
+        
+        total = total_sum_income + total_sum_expense if total_sum_income is not None and total_sum_expense is not None else 0
+        i_percent = (total_sum_income / total) * 100 if total != 0 else 0
+        e_percent = (total_sum_expense / total) * 100 if total != 0 else 0
+
+        total_data = []
+        total_data.append({
+            'total_income': total_sum_income,
+            "i_percent": round(i_percent, 2),
+            'total_expense': total_sum_expense,
+            "e_percent": round(e_percent, 2),
+            "total": total,
+        })
+        # Return the response as JSON
+        return jsonify({
+            "categories": categories,
+            "transactions": transactions,
+            "total_sum_income": total_sum_income,
+            "chart_data_income": chart_data_income,
+            "total_sum_expense": total_sum_expense,
+            "chart_data_expense": chart_data_expense,
+            "chart_data_total": total_data
+        }), 200

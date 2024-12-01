@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import TransactionPage from './pages/TransactionPage';
 import CategoryPage from './pages/CategoryPage';
 import LogoutPage from './pages/LogoutPage';
+import DashboardPage from './pages/DashboardPage';
 import styled from 'styled-components';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           {isAuthenticated && <NavLink to="/logout">Logout</NavLink>}
           {isAuthenticated && <NavLink to="/transactions">Manage Transactions</NavLink>}
           {isAuthenticated && <NavLink to="/categories">Manage Categories</NavLink>}
+          {isAuthenticated && <NavLink to="/dashboard">Dashboard</NavLink>}
         </NavLinks>
       </Nav>
 
@@ -33,6 +35,7 @@ function App() {
           <Route path="/logout" element={isAuthenticated ? <LogoutPage /> : <Navigate to="/" />} />
           <Route path="/transactions" element={isAuthenticated ? <TransactionPage /> : <Navigate to="/login" />} />
           <Route path="/categories" element={isAuthenticated ? <CategoryPage /> : <Navigate to="/login" />} />
+          <Route path="/dashboard" element={isAuthenticated ? <DashboardPage /> : <Navigate to="/login" />} />
         </Routes>
       </MainContent>
     </AppContainer>

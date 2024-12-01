@@ -112,6 +112,32 @@ export const deleteCategory = async (categoryId, token) => {
   }
 };
 
+export const getData = async (token, start, end, start_t, end_t) => {
+  try {
+    // Format the dates if necessary (e.g., to YYYY-MM-DD)
+    const formattedStartDateC = start ? new Date(start).toISOString().split('T')[0] : null;
+    const formattedEndDateC = end ? new Date(end).toISOString().split('T')[0] : null; 
+
+    const formattedStartDate = start_t ? new Date(start_t).toISOString().split('T')[0] : null;
+    const formattedEndDate = end_t ? new Date(end_t).toISOString().split('T')[0] : null;
+    
+    // Send the start_date and end_date as query parameters
+    const response = await api.get('/dashboard/get-data',  {
+      headers: { Authorization: `Bearer ${token}` },
+      params: {
+        start_date_chart: formattedStartDateC,
+        end_date_chart: formattedEndDateC,
+        start_date: formattedStartDate,
+        end_date: formattedEndDate
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Get Data Error:', error);
+    throw error;
+  }
+};
+
 export const updateCategory = async (id, updatedData, token) => {
   try {
     const response = await api.put(`/categories/${id}/update`, updatedData, {

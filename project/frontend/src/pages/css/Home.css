@@ -3,7 +3,7 @@
 /* Пример базовых стилей */
 .container {
   font-family: 'Arial', sans-serif;
-  max-width: 1200px;
+  max-width: auto;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
