@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchTransactions, fetchCategories, addTransaction, deleteTransaction, updateTransaction, addCategory, deleteCategory, updateCategory, getData } from "../api";
+import { addTransaction, deleteTransaction, updateTransaction, addCategory, deleteCategory, updateCategory, getData } from "../api";
 import Select from 'react-select';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -20,7 +20,6 @@ const DashboardPage = () => {
     description: '',
   });
   const [showTModal, setShowTModal] = useState(false); 
-  const [showTAddForm, setShowTAddForm] = useState(false);
   const [isEditing, setTIsEditing] = useState(false); 
   const [isEditingC, setCIsEditing] = useState(false);
   const [filteredTransactionsCategory, setFilteredTransactionsCategory] = useState([]);
@@ -42,7 +41,6 @@ const DashboardPage = () => {
   const [endDateTNone, setEndDateTNone] = useState(false); // Флаг для "None"
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedCategoryT, setSelectedCategoryT] = useState({ value: null, label: 'All' });
-  const [error, setError] = useState("");
   const [totalTrData, setTotalTrData] = useState([]);
   const [totalTr_SumE, setTotalTr_SumE] = useState(0);
   const [totalTr_SumI, setTotalTr_SumI] = useState(0);
@@ -70,18 +68,17 @@ const DashboardPage = () => {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-            UpdateAllState();          
+            UpdateAllState();  
         } catch (error) {
           console.error("Error fetching data:", error);
         }
       }
     };
-    fetchData();
+    fetchData();// eslint-disable-next-line
   }, [DateStartC, DateEndC, DateStartT, DateEndT, cFilterType, selectedCategoryT, tfilterType]);
 
   const UpdateAllState = async () => {
         const token = localStorage.getItem("token");
-        const data = await fetchTransactions(token);
         resetTFormState();
         setTIsEditing(false);
         setCIsEditing(false);
@@ -154,7 +151,7 @@ const DashboardPage = () => {
         }
 
       } catch (error) {
-        setError('Failed to delete category. Please try again.');
+        console.error('Failed to delete category. Please try again.');
       }
     };
 
@@ -167,7 +164,7 @@ const DashboardPage = () => {
         UpdateAllState();
       } catch (error) {
         console.error('Error updating transaction:', error);
-        setError('Error updating transaction. Please try again.');
+        console.error('Error updating transaction. Please try again.');
       }
     } else {
       try {
@@ -175,7 +172,7 @@ const DashboardPage = () => {
         UpdateAllState();
       } catch (error) {
         console.error('Error adding transaction:', error);
-        setError('Error adding transaction. Please try again.');
+        console.error('Error adding transaction. Please try again.');
       }
     }
   };
@@ -189,7 +186,7 @@ const DashboardPage = () => {
       UpdateAllState();
       setFilteredTransactionsCategory(filteredTransactionsCategory.filter((t) => t.id !== transactionId));
     } catch (err) {
-      setError('Error deleting transaction. Please try again.');
+      console.error('Error deleting transaction. Please try again.');
     }
   };
 
@@ -243,17 +240,17 @@ const DashboardPage = () => {
 
   const FetchCatClick = async (id, type = 'None') => {
     setCurrentTCategoryId(id);
-    if (type == "None"){
+    if (type === "None"){
     setCurrentCategoryName(categories.find((c) => c.value === id).label);
     setFilteredTransactionsCategory(allTransactions.filter((t) => t.category_id === id));
     setCFilterType('All');
     }
-    else if (type == 'income') {
+    else if (type === 'income') {
       setCurrentCategoryName(categories.find((c) => c.value === id).label);
       setFilteredTransactionsCategory(allTransactions.filter((t) => t.category_id === id && t.type === 'income'));
       setCFilterType('Income');
     }
-    else if (type == 'expense') {
+    else if (type === 'expense') {
       setCurrentCategoryName(categories.find((c) => c.value === id).label);
       setFilteredTransactionsCategory(allTransactions.filter((t) => t.category_id === id && t.type === 'expense'));
       setCFilterType('Expense');
@@ -268,7 +265,6 @@ const DashboardPage = () => {
       category_id: '',
     });
     setSelectedCategory(null);
-    setError('');
     setTIsEditing(false);
     // setShowAddForm(true);
   };
@@ -277,7 +273,6 @@ const DashboardPage = () => {
       name: '',
       description: '',
     });
-    setError('');
     setCIsEditing(false);
     // setShowAddForm(true);
   };
@@ -585,9 +580,9 @@ const DashboardPage = () => {
             </div>
           </div>
           <div className="table-container" style = {{ height: "100%", maxHeight: "25%"}}>
-            <div className="table-row" style = {{ overflow: "auto", scrollbarWidth: "none", maxHeight: "100%"}}>
-              <div className="table-box" style = {{ overflow: "auto", scrollbarWidth: "none", maxHeight: "90%"}}>
-                <div style = {{display: 'flex', justifyContent: 'center', alignItems: 'center '}}>
+            <div className="table-row" style = {{ overflow: "auto", scrollbarWidth: "none",  maxHeight: "100%"}}>
+              <div className="table-box" style = {{ overflow: "auto", scrollbarWidth: "thin", maxHeight: "90%"}}>
+                <div style = {{display: 'flex'}}>
                   <DataTable value={totalTrData} tableStyle={{ minWidth: '8rem' }}>
                     <Column field="total_tr_income" header="Sum (Income)" ></Column>
                     <Column field="total_tr_i_percent" header="Percent (Income)" ></Column>
