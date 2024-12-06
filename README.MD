@@ -1,14 +1,53 @@
-# API Documentation
-
+# Hton
 **Author**: Georgii  
 **Date**: 2024-12-02
 
 - ### [pdf](info/DOCS_HTON.pdf)
 - ### [Certificate](info/SF.pdf)
 
+
+## Images
+
+ - ###### [All images](info/images/)
+#### Main 
+<div style="display: flex; justify-content: space-around;">
+  <img src="info/images/main.jpg" alt="Main" width="30%" />
+  <img src="info/images/login.jpg" alt="Login" width="30%" />
+  <img src="info/images/register.jpg" alt="Register" width="30%" />
+</div>
+
+#### Manage Transactions and Categories
+
+<div style="display: flex; justify-content: space-around;">
+  <img src="info/images/aC.jpg" alt="Categories" width="30%" />
+  <img src="info/images/aT.jpg" alt="Transactions" width="30%" />
+</div>
+
+#### Dashboard
+<div style="display: flex; justify-content: space-around;">
+  <img src="info/images/dash.jpg" alt="Main" width="49%" />
+  <img src="info/images/daskF.jpg" alt="Main" width="49%" />
+</div>
+<br/>
+
+<div style="display: flex; justify-content: space-around;">
+  <img src="info/images/dashac.jpg" alt="Main" width="40%" />
+  <img src="info/images/dashat.jpg" alt="Login" width="40%" />
+</div>
+<br>
+<div style="display: flex; justify-content: space-around;">
+  <img src="info/images/dashec.jpg" alt="Main" width="40%" />
+  <img src="info/images/dashet.jpg" alt="Login" width="40%" />
+</div>
+
+---
+# API Documentation
+
 ## Introduction
 
 This API provides functionalities for managing categories, transactions, and user authentication. Below is an overview of the key routes and functions available in the API.
+
+
 
 ### Available Routes and Functions
 
